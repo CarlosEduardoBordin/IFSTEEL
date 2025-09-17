@@ -7,7 +7,7 @@ from widget_class import TextBoxVrf
 class PerfilList(wx.MDIChildFrame):
     def __init__(self, parent_mdi:  wx.MDIParentFrame, parent_child: wx.MDIChildFrame, frame_name):
         super().__init__(parent_mdi, id=wx.ID_ANY, title=frame_name,
-                         pos=wx.DefaultPosition, size=(430, 400), style=wx.DEFAULT_FRAME_STYLE & ~wx.MAXIMIZE_BOX)
+                         pos=wx.DefaultPosition, size=(480, 400), style=wx.DEFAULT_FRAME_STYLE & ~wx.MAXIMIZE_BOX)
         # self.parent = parent
         self.parent_mdi = parent_mdi
         self.parent_child = parent_child
@@ -64,6 +64,8 @@ class PerfilList(wx.MDIChildFrame):
         self.box_main = StaticBox(self.window_main_panel, "Lista",orientation = "vertical")
         #list crtl
         self.list_ctrl = wx.ListCtrl(self.box_main, style=wx.LC_REPORT)
+        self.list_ctrl.SetMinSize((200, 400))
+
         self.box_main.widgets_add(self.list_ctrl,0,True)
         self.list_ctrl.InsertColumn(0, "Perfil")
         self.list_ctrl.InsertColumn(1, "Status")

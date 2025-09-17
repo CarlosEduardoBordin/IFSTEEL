@@ -202,7 +202,7 @@ class ConfiguracoesChildFrame(wx.MDIChildFrame):
         self.box_variaveis_norma.widgets_add(self.lfc_input, 1, False)
         #box memoria de calculo
         self.box_memoria = StaticBox(self.window_main_panel, "Configurações da memória de cálculo", orientation="grid")
-        self.utilizar_na_horizontal = wx.StaticText(self.box_memoria, id=wx.ID_ANY, label="Utilizar papel na horizontal : ")
+        self.utilizar_na_horizontal = wx.StaticText(self.box_memoria, id=wx.ID_ANY, label="Gerar a memória em modo paisagem : ")
         self.box_memoria.widgets_add(self.utilizar_na_horizontal, 0, False)
         self.checkbox_h = wx.CheckBox(self.box_memoria, label="")
 

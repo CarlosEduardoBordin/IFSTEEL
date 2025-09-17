@@ -68,7 +68,7 @@ class AefValuesConfiguration(wx.MDIChildFrame):
 
         self.aef_calc_box = StaticBox(self.box_main, "Calculo da área",orientation = "grid")
         self.box_main.widgets_add(self.aef_calc_box,0,"False")
-        self.ct_text = wx.StaticText(self.aef_calc_box, id=wx.ID_ANY, label="Coeficiente Ct (ADM): ")
+        self.ct_text = wx.StaticText(self.aef_calc_box, id=wx.ID_ANY, label="Coeficiente Ct : ")
         self.ct_text.SetToolTip("(Ct) é um coeficiente de redução da área líquida. Ex: podendo (Ct = 1) para força de tração "
                                 "transmitida diretamente para cada elemento da seção "
                                 "transversal da barra, (Ct = Ac/Ag), quando a tração for "
