@@ -340,20 +340,26 @@ class SteelChildFrame(wx.MDIChildFrame):
                                                         self.select_type.GetValue(), frame_name, path)
                 # print(self.data)
                 resultado = self.data.calculate()
-                if resultado:
-                    self.status_label.SetLabel("APROVADO!")
+                if resultado[0]:
+                    label = f"APROVADO! Uso: {round(resultado[1],2)*100} %"
+                    self.status_label.SetLabel(label)
                     self.status_label.SetForegroundColour(wx.Colour(20, 200, 20))
                     # self.status_label.set_valueand_color("APROVADO!", 20, 200, 20)#Alinhamento de centro nao esta funcionando !
                 else:
-                    self.status_label.SetLabel("REPROVADO!")
+                    label = f"REPROVADO! Uso: {round(resultado[1], 2) * 100} %"
+                    self.status_label.SetLabel(label)
                     self.status_label.SetForegroundColour(wx.Colour(200, 20, 20))
                     # self.status_label.set_valueand_color("REPROVADO!",200, 20, 20)
                 self.box_status.Update()
                 self.box_status.Layout()
 
-                if parent.get_open_file():
-                    caminho_arquivo = f"{path}.pdf"
-                    os.startfile(caminho_arquivo)
+                try:
+                    if parent.get_open_file():
+                        caminho_arquivo = f"{path}.pdf"
+                        os.startfile(caminho_arquivo)
+                except Exception as e:
+                    #nao e erro
+                    pass
 
             except Exception as e:
                 wx.MessageBox(f"Erro : {e}", "Erro", wx.OK | wx.ICON_ERROR)
@@ -631,8 +637,8 @@ class SteelChildFrame(wx.MDIChildFrame):
 
         # self.status_label = StaticTextTune(self.box_status, "STATUS",wx.ALIGN_CENTER | wx.ALIGN_CENTER_HORIZONTAL, 0,0,0, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL)
         self.status_label = wx.StaticText(self.box_status, id=wx.ID_ANY, label="STATUS",
-                                          style=wx.ALIGN_CENTER_HORIZONTAL)  #style=wx.ALIGN_CENTER_HORIZONTAL centralizar o texto na box
-        self.status_label.SetFont(wx.Font(12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL))
+                                          style=wx.ALIGN_CENTER_HORIZONTAL)  #style=wx.ALIGN_CENTER_HORIZONTAL centralizar o texto na box style=wx.ALIGN_CENTER_HORIZONTAL
+        self.status_label.SetFont(wx.Font(10, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL))
         self.box_status.widgets_add(self.status_label, 0, False)
 
         self.main_sizer.Add(self.box_steel_type, proportion=0, flag=wx.ALL | wx.EXPAND,

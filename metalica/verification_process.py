@@ -1854,6 +1854,8 @@ class VerificationProcess:
                 {"tipo": "paragrafo", "conteudo": "Verificando as codições:\n "},
             ]
         }
+        valores_de_retorno_ec = []
+
         for value in utilization:
             if value >= 0.2:
                 last_verif = value + (8 / 9) * (mrdx[2] + mrdy[2])
@@ -1878,6 +1880,8 @@ class VerificationProcess:
                 }
                 memoria_calculo_forcas_combinadas["corpo"].append(trecho_memorioa)
 
+            valores_de_retorno_ec.append(last_verif)
+
             passou = last_verif <= 1
             status_texto = r" \textcolor{ForestGreen}{Aprovado}" if passou else r"\textcolor{red}{Reprovado}"
             texto_conferencia = {
@@ -1887,7 +1891,10 @@ class VerificationProcess:
             }
             memoria_calculo_forcas_combinadas["corpo"].append(texto_conferencia)
             result_list.append(passou)
-        return all(result_list), memoria_calculo_forcas_combinadas
+
+        maior_valor = max(valores_de_retorno_ec)
+
+        return all(result_list), memoria_calculo_forcas_combinadas, maior_valor.magnitude
 
     def combined_forces_s(self):
         # fazer a verificao aqui! ver na norma
@@ -1906,6 +1913,8 @@ class VerificationProcess:
                 {"tipo": "paragrafo", "conteudo": "Verificando as codições:\n "},
             ]
         }
+        valores_de_retorno_ec = []
+
         for value in utilization:
             if value >= 0.2:
                 last_verif = value + (8 / 9) * (mrdx[2] + mrdy[2])
@@ -1930,6 +1939,8 @@ class VerificationProcess:
                 }
                 memoria_calculo_forcas_combinadas["corpo"].append(trecho_memorioa)
 
+            valores_de_retorno_ec.append(last_verif)
+
             passou = last_verif <= 1
             status_texto = r" \textcolor{ForestGreen}{Aprovado}" if passou else r"\textcolor{red}{Reprovado}"
             texto_conferencia = {
@@ -1939,7 +1950,9 @@ class VerificationProcess:
             }
             memoria_calculo_forcas_combinadas["corpo"].append(texto_conferencia)
             result_list.append(passou)
-        return all(result_list), memoria_calculo_forcas_combinadas
+            maior_valor = max(valores_de_retorno_ec)
+
+        return all(result_list), memoria_calculo_forcas_combinadas, maior_valor.magnitude
 
 
 
@@ -1967,7 +1980,7 @@ class VerificationProcess:
                 meu_relatorio.add_calculo(ec[1])
                 meu_relatorio.gerar_pdf()
                 wx.MessageBox("Calculado com sucesso!", "Sucesso",wx.OK | wx.ICON_INFORMATION )
-                return ec[0]
+                return ec[0], ec[2]
             except Exception as error:
                 wx.MessageBox(f"{error}", "Erro",wx.OK | wx.ICON_ERROR)
                 return ec[0]
@@ -1993,11 +2006,10 @@ class VerificationProcess:
                 meu_relatorio.add_calculo(ecs[1])
                 meu_relatorio.gerar_pdf()
                 wx.MessageBox("Calculado com sucesso!", "Sucesso", wx.OK | wx.ICON_INFORMATION)
-                return ecs[0]
+                return ecs[0], ecs[2]
             except Exception as error:
                 wx.MessageBox(f"{error}", "Erro", wx.OK | wx.ICON_ERROR)
                 return ecs[0]
-
     def calculate_all(self):
         if self.type == "Laminado":
             ec = self.combined_forces_l()

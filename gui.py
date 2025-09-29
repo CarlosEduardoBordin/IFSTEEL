@@ -19,7 +19,7 @@ class MDIFrame(wx.MDIParentFrame):
     # Declara Construtor
     def __init__(self):
         # Cria Formulario Pai
-        wx.MDIParentFrame.__init__(self, None, -1, "IFSteel v1.0", size=(wx.GetDisplaySize()))
+        wx.MDIParentFrame.__init__(self, None, -1, "IFSteel v1.1", size=(wx.GetDisplaySize()))
         self.Maximize(True)
         self.SetIcon(icon = wx.Icon("icones/if.png", wx.BITMAP_TYPE_PNG))  # Definindo o ícone para o MDIFrame
         #unidades de medida pre-definidas
