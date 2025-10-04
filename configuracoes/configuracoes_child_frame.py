@@ -14,7 +14,8 @@ class ConfiguracoesChildFrame(wx.MDIChildFrame):
 
         self.SetIcon( wx.Icon("icones/cfg.png", wx.BITMAP_TYPE_PNG))  # Definindo o ícone para o MDIFrame
 
-        self.window_main_panel = wx.Panel(self)
+        self.window_main_panel = wx.ScrolledWindow(self, style=wx.VSCROLL)
+        self.window_main_panel.SetScrollRate(0, 20)
         self.main_sizer = wx.BoxSizer(wx.VERTICAL)
 
         def on_btn_reset(event):
@@ -28,8 +29,8 @@ class ConfiguracoesChildFrame(wx.MDIChildFrame):
             self.combo_box_si_press.SetValue("N/m^2")
             self.input_e.SetValue("200000000000")
             self.input_g.SetValue("77000000000")
-            self.lft_input.SetValue("2")
-            self.lfc_input.SetValue("2")
+            self.lft_input.SetValue("300")
+            self.lfc_input.SetValue("200")
             self.combo_papel.SetValue("a4paper")
             self.checkbox_abrir_apos_gerar.SetValue(True)
             self.checkbox_h.SetValue(True)
@@ -190,12 +191,12 @@ class ConfiguracoesChildFrame(wx.MDIChildFrame):
         self.input_y_um = TextBoxVrf(self.box_variaveis_norma, value=y1, only_numeric=True)
         self.box_variaveis_norma.widgets_add(self.input_y_um, 1, False)
 
-        self.lft_text = wx.StaticText(self.box_variaveis_norma, id=wx.ID_ANY, label="Limite de esbeltez tração (m): ")
+        self.lft_text = wx.StaticText(self.box_variaveis_norma, id=wx.ID_ANY, label="Limite de esbeltez tração : ")
         self.box_variaveis_norma.widgets_add(self.lft_text, 0, False)
         lft = str(self.parent.get_lf_barra()[0])
         self.lft_input = TextBoxVrf(self.box_variaveis_norma, value=lft, only_numeric=True)
         self.box_variaveis_norma.widgets_add(self.lft_input, 1, False)
-        self.lfc_text = wx.StaticText(self.box_variaveis_norma, id=wx.ID_ANY, label="Limitação de esbeltez compressão (m): ")
+        self.lfc_text = wx.StaticText(self.box_variaveis_norma, id=wx.ID_ANY, label="Limitação de esbeltez compressão: ")
         self.box_variaveis_norma.widgets_add(self.lfc_text, 0, False)
         lfc = str(self.parent.get_lf_barra()[1])
         self.lfc_input = TextBoxVrf(self.box_variaveis_norma, value=lfc, only_numeric=True)

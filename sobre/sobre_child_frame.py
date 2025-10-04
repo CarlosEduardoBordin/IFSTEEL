@@ -7,21 +7,33 @@ from widget_class import StaticBox, LinkButton
 class SobreChildFrame(wx.MDIChildFrame):
 
     def __init__(self, parent):
-        super().__init__(parent, -1, "Sobre", size=(300, 610), style=wx.DEFAULT_FRAME_STYLE & ~wx.MAXIMIZE_BOX)
+        super().__init__(parent, -1, "Sobre", size=(300, 755), style=wx.DEFAULT_FRAME_STYLE & ~wx.MAXIMIZE_BOX)
         # self.SetMinSize((300, 610))
         # self.SetMaxSize((300, 610))
         self.SetIcon(wx.Icon("icones/info.png", wx.BITMAP_TYPE_PNG))  # Definindo o ícone para o MDIFrame
 
-        self.window_main_panel = wx.Panel(self)
+        self.window_main_panel = wx.ScrolledWindow(self, style=wx.VSCROLL)
+        self.window_main_panel.SetScrollRate(0, 20)
         self.main_sizer = wx.BoxSizer(wx.VERTICAL)
 
-        self.desenvolvido = StaticBox(self.window_main_panel, "Desenvolvido por :", orientation="vertical")
+        self.if_desenvolvimento = StaticBox(self.window_main_panel, "Descrição :",
+                                    orientation="vertical")
+        self.if_desenvolvimento_text = wx.StaticText(self.if_desenvolvimento,
+                                    label="Desenvolvido para o projeto final do curso de \n"
+                                          "Engenharia Civil - IFSUL campus PASSO FUNDO",
+                                    size=(200, -1))
+        self.if_desenvolvimento.widgets_add(self.if_desenvolvimento_text, 0, False)
 
+        self.desenvolvido = StaticBox(self.window_main_panel, "Desenvolvido por :", orientation="vertical")
         self.button_yt = LinkButton(self.desenvolvido, "Carlos Eduardo A. Bordin", "https://www.youtube.com/@carloseduardobordin", "icones/yt.png")
         self.desenvolvido.widgets_add(self.button_yt, 0, False)
 
-        self.bibliotecas = StaticBox(self.window_main_panel, "Bibliotecas e ferramentas utilizadas :", orientation="vertical")
+        self.orientado = StaticBox(self.window_main_panel, "Orientado por :", orientation="vertical")
+        self.orientado_link = LinkButton(self.orientado, "Rodrigo Bordignon", "http://lattes.cnpq.br/9832992246732286")
 
+        self.orientado.widgets_add(self.orientado_link, 0, False)
+
+        self.bibliotecas = StaticBox(self.window_main_panel, "Bibliotecas e ferramentas utilizadas :", orientation="vertical")
         self.b1 = LinkButton(self.bibliotecas, "wxPython", "https://wxpython.org/index.html", "icones/wxpython.png")
         self.bibliotecas.widgets_add(self.b1, 0, False)
         self.b2 = LinkButton(self.bibliotecas, "Pint", "https://pint.readthedocs.io/en/stable/")
@@ -57,8 +69,9 @@ class SobreChildFrame(wx.MDIChildFrame):
         self.report_box.widgets_add(self.report_obrigado, 0, False)
 
 
-
+        self.main_sizer.Add(self.if_desenvolvimento, proportion=0, flag=wx.ALL | wx.EXPAND, border=5)
         self.main_sizer.Add(self.desenvolvido, proportion=0, flag=wx.ALL | wx.EXPAND, border=5)
+        self.main_sizer.Add(self.orientado, proportion=0, flag=wx.ALL | wx.EXPAND, border=5)
         self.main_sizer.Add(self.bibliotecas, proportion=0, flag=wx.ALL | wx.EXPAND, border=5)
         self.main_sizer.Add(self.report_box, proportion=0, flag=wx.ALL | wx.EXPAND, border=5)
         self.window_main_panel.SetSizer(self.main_sizer)

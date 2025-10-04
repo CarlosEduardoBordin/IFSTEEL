@@ -194,12 +194,8 @@ class SteelChildFrame(wx.MDIChildFrame):
                                         parent.get_unit_press()[0])
 
                 lft = self.parent.get_lf_barra()[0]
-                lft = unit_converter_dois(float(lft), "m",
-                                        parent.get_unit_lenght()[0])
 
                 lfc = self.parent.get_lf_barra()[1]
-                lfc = unit_converter_dois(float(lfc), "m",
-                                          parent.get_unit_lenght()[0])
 
                 g = unit_converter_dois(float(parent.get_g_modulo()), "N/m^2",
                                         parent.get_unit_press()[0])
@@ -316,8 +312,8 @@ class SteelChildFrame(wx.MDIChildFrame):
                       (a[34]) * ureg(parent.get_unit_moment()[0]), (a[35]),
                       (a[36]) * ureg(parent.get_unit_press()[0]),
                       (a[37]) * ureg(parent.get_unit_press()[0]), (a[38]),
-                      (a[39]) * ureg(parent.get_unit_lenght()[0]),
-                      (a[40])* ureg(parent.get_unit_lenght()[0])
+                      (a[39]) * ureg.dimensionless,
+                      (a[40]) * ureg.dimensionless
                       )
             print(a_list)
             return a_list
@@ -341,12 +337,12 @@ class SteelChildFrame(wx.MDIChildFrame):
                 # print(self.data)
                 resultado = self.data.calculate()
                 if resultado[0]:
-                    label = f"APROVADO! Uso: {round(resultado[1],2)*100} %"
+                    label = f"APROVADO! {round(resultado[1],2)*100} %"
                     self.status_label.SetLabel(label)
                     self.status_label.SetForegroundColour(wx.Colour(20, 200, 20))
                     # self.status_label.set_valueand_color("APROVADO!", 20, 200, 20)#Alinhamento de centro nao esta funcionando !
                 else:
-                    label = f"REPROVADO! Uso: {round(resultado[1], 2) * 100} %"
+                    label = f"REPROVADO! {round(resultado[1], 2) * 100} %"
                     self.status_label.SetLabel(label)
                     self.status_label.SetForegroundColour(wx.Colour(200, 20, 20))
                     # self.status_label.set_valueand_color("REPROVADO!",200, 20, 20)

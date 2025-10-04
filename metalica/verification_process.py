@@ -77,14 +77,7 @@ class VerificationProcess:
         self.casa_decimal_forca = int(float(self.parent_mdi.get_unit_force()[1]))
         self.casa_decimal_momento = int(float(self.parent_mdi.get_unit_moment()[1]))
         self.casa_decimal_pressao = int(float(self.parent_mdi.get_unit_press()[1]))
-        # self.casa_decimal_comprimento = self.parent.get_unit_press()[0]
-        # self.casa_decimal_area = 5
-        # self.casa_decimal_volume = 5
-        # self.casa_decimal_inercia = 5
-        # self.casa_decimal_six = 2
-        # self.casa_decimal_forca = 2
-        # self.casa_decimal_momento = 2
-        # self.casa_decimal_pressao = 2
+
 
     def propriedades(self):
 
@@ -135,7 +128,14 @@ class VerificationProcess:
             aef = self.aef
         ntrd = aef * self.fy / self.y_um
         ntsd = self.fnt
-        if self.lfx >= self.lft or self.lfy >= self.lft:
+
+        ind_esblt_x = self.lfx / self.r_x_text
+        ind_esblt_y = self.lfy / self.r_y_text
+
+        print(ind_esblt_y)
+        print(self.lft)
+
+        if float(ind_esblt_x) >= float(self.lft) or float(ind_esblt_y) >= float(self.lft):
             limite_esbeltez = r"\textcolor{red}{Esbeltez acima do limite configurado}"
         else:
             limite_esbeltez = ""
@@ -176,7 +176,7 @@ class VerificationProcess:
         ind_esblt_x = self.lfx / self.r_x_text
         ind_esblt_y = self.lfy / self.r_y_text
 
-        if self.lfx >= self.lfc or self.lfy >= self.lfc:
+        if float(ind_esblt_x) >= float(self.lfc) or float(ind_esblt_y) >= float(self.lfc):
             limite_esbeltez = r"\textcolor{red}{Esbeltez acima do limite configurado}"
         else:
             limite_esbeltez = ""
@@ -404,7 +404,7 @@ class VerificationProcess:
         ind_esblt_x = self.lfx / self.r_x_text
         ind_esblt_y = self.lfy / self.r_y_text
 
-        if self.lfx >= self.lfc or self.lfy >= self.lfc:
+        if float(ind_esblt_x) >= float(self.lfc) or float(ind_esblt_y) >= float(self.lfc):
             limite_esbeltez = r"\textcolor{red}{Esbeltez acima do limite configurado}"
         else:
             limite_esbeltez = ""
@@ -1898,6 +1898,7 @@ class VerificationProcess:
 
     def combined_forces_s(self):
         # fazer a verificao aqui! ver na norma
+        global maior_valor, maior_valor
         nrdt = self.normal_traction_l()
         nrdc = self.normal_compression_s()
         vrd_x = self.shear_force_y_l()
