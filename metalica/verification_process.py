@@ -102,7 +102,7 @@ class VerificationProcess:
                         r"Ntsd =  \Rightarrow " + f"{self.fnt:.{self.casa_decimal_forca}f}" +
                         r" Ncsd =  \Rightarrow " + f"{self.fnc:.{self.casa_decimal_forca}f}" +
                         r" Vsdx =  \Rightarrow " + f"{self.fcx:.{self.casa_decimal_comprimento}f}" +
-                        r" Vsdx =  \Rightarrow " + f"{self.fcy:.{self.casa_decimal_comprimento}f}" +
+                        r" Vsdy =  \Rightarrow " + f"{self.fcy:.{self.casa_decimal_comprimento}f}" +
                         r" Msdx =  \Rightarrow " + f"{self.mfx:.{self.casa_decimal_momento}f}" +
                         r" Msdy =  \Rightarrow " + f"{self.mfy:.{self.casa_decimal_momento}f}"
                 )},
@@ -679,10 +679,12 @@ class VerificationProcess:
                     f"1.24 * \\left( \\frac{{{lambda_p}}}{{{lambda_sf}}} \\right)^2 * " +
                     f"\\frac{{{vpl.magnitude:.{self.casa_decimal_forca}f}}}{{{self.y_um}}} = {vrd:.{self.casa_decimal_forca}f}")
 
-        passou = self.fcx <= vrd  # verificando
+        passou = self.fcy <= vrd  # verificando
         status_texto = r" \textcolor{ForestGreen}{Aprovado}" if passou else r"\textcolor{red}{Reprovado}"
 
-        memoria_calculo_shear_x = {
+        print("+++++++++++++++++++++++++++++++++++++++++++++++")
+        print(f"fcx {self.fcx}  fCY {self.fcy}")
+        memoria_calculo_shear_y = {
             "titulo_da_secao": "Verificação da cortante em relalção ao eixo Y do plano",
             "corpo": [
                 {"tipo": "paragrafo", "conteudo": "\n Verificação da flambagem da alma pela cortante: \n "},
@@ -737,17 +739,17 @@ class VerificationProcess:
                 {
                     "tipo": "formula",
                     "conteudo": (
-                            r"V_{sd} \le  V_{rd} \Rightarrow " + f"{self.fcx:.{self.casa_decimal_pressao}f}" + r"\le" + f"{vrd:.{self.casa_decimal_forca}f}"
+                            r"V_{sd} \le  V_{rd} \Rightarrow " + f"{self.fcy:.{self.casa_decimal_pressao}f}" + r"\le" + f"{vrd:.{self.casa_decimal_forca}f}"
                             + r"\quad" + status_texto)
                 },
             ]
         }
 
-        utilization_s_x = self.fcx / vrd
+        utilization_s_y = self.fcy / vrd
         if passou:
-            return True, memoria_calculo_shear_x, utilization_s_x
+            return True, memoria_calculo_shear_y, utilization_s_y
         else:
-            return False, memoria_calculo_shear_x, utilization_s_x
+            return False, memoria_calculo_shear_y, utilization_s_y
 
     def shear_force_x_l(self):
         vrd = 0
@@ -779,10 +781,10 @@ class VerificationProcess:
                             f"1.24 * \\left( \\frac{{{lambda_p}}}{{{lambda_sf}}} \\right)^2 * "
                             + f"\\frac{{{vpl.magnitude:.{self.casa_decimal_forca}f}}}{{{self.y_um}}} = {vrd:.{self.casa_decimal_forca}f}")
 
-        passou = self.fcy <= vrd  # verificando
+        passou = self.fcx <= vrd  # verificando
         status_texto = r" \textcolor{ForestGreen}{Aprovado}" if passou else r"\textcolor{red}{Reprovado}"
 
-        memoria_calculo_shear_y = {
+        memoria_calculo_shear_x = {
             "titulo_da_secao": "Verificação da cortante em relalção ao eixo X do plano",
             "corpo": [
                 {"tipo": "paragrafo", "conteudo": "\n Verificação da flambagem da mesa pela cortante: \n "},
@@ -846,11 +848,11 @@ class VerificationProcess:
             ]
         }
 
-        utilization_s_y = self.fcy / vrd
+        utilization_s_x = self.fcx / vrd
         if passou:
-            return True, memoria_calculo_shear_y, utilization_s_y
+            return True, memoria_calculo_shear_x, utilization_s_x
         else:
-            return False, memoria_calculo_shear_y, utilization_s_y
+            return False, memoria_calculo_shear_x, utilization_s_x
 
     def moment_force_x_l(self):
         mrd_flt, mrd_flm, mrd_fla = 0, 0, 0  #inicializando para nao dar problema
@@ -1894,7 +1896,7 @@ class VerificationProcess:
 
         maior_valor = max(valores_de_retorno_ec)
 
-        return all(result_list), memoria_calculo_forcas_combinadas, maior_valor.magnitude
+        return all([result_list, vrd_x[0],vrd_y[0]]), memoria_calculo_forcas_combinadas, maior_valor.magnitude
 
     def combined_forces_s(self):
         # fazer a verificao aqui! ver na norma
@@ -1953,7 +1955,7 @@ class VerificationProcess:
             result_list.append(passou)
             maior_valor = max(valores_de_retorno_ec)
 
-        return all(result_list), memoria_calculo_forcas_combinadas, maior_valor.magnitude
+        return all([result_list, vrd_x[0], vrd_y[0]]), memoria_calculo_forcas_combinadas, maior_valor.magnitude
 
 
 

@@ -257,8 +257,8 @@ class SteelChildFrame(wx.MDIChildFrame):
                     # print(f"Unidade : {unit} , valor: {value_adress} , para  {value_converted}")
                 # print(transformed_list_perfil_data)
                 #o valor da cortante em x e y para calculo corresponde a forca atuando perpendicularmente ao perfil!+
-                values_to_append = [aef, fy, fu, lfx_value, lfy_value, lfz_value, lb_value, fnt_value,
-                                    fnc_value, fcx_value, fcy_value, mfx_value, mfy_value,
+                values_to_append = [aef, fy, fu, abs(lfx_value), abs(lfy_value), abs(lfz_value), abs(lb_value), abs(fnt_value),
+                                    abs(fnc_value), abs(fcx_value), abs(fcy_value), abs(mfx_value), abs(mfy_value),
                                     y_um, g, e, cb, lft, lfc]
                 print(f"Area efetiva {aef}")
                 transformed_list_perfil_data.extend(values_to_append)

@@ -4,6 +4,7 @@ import wx.aui
 import pint
 import os
 # importa modulos
+from update_verification import UpdateVerif
 from configuracoes.configuracoes_child_frame import ConfiguracoesChildFrame
 from sobre.sobre_child_frame import SobreChildFrame
 from metalica.steel_child_frame import SteelChildFrame
@@ -18,8 +19,12 @@ class MDIFrame(wx.MDIParentFrame):
 
     # Declara Construtor
     def __init__(self):
+        #verificacao da versao e att
+        update_verification = UpdateVerif()
+        update_verification.check_for_updates()
+        current_verision_value = update_verification.current_version
         # Cria Formulario Pai
-        wx.MDIParentFrame.__init__(self, None, -1, "IFSteel v1.1", size=(wx.GetDisplaySize()))
+        wx.MDIParentFrame.__init__(self, None, -1, f"IFSteel {current_verision_value}", size=(wx.GetDisplaySize()))
         self.Maximize(True)
         self.SetIcon(icon = wx.Icon("icones/if.png", wx.BITMAP_TYPE_PNG))  # Definindo o ícone para o MDIFrame
         #unidades de medida pre-definidas
@@ -54,7 +59,7 @@ class MDIFrame(wx.MDIParentFrame):
         self.e_modulo = self.data_si.get_name_and_return_col_value_str("Tipo", f"e", ["Unidade"])
         self.y_um = self.data_si.get_name_and_return_col_value_str("Tipo", f"y1", ["Unidade"])
         self.lft = self.data_si.get_name_and_return_col_value_str("Tipo", f"lft", ["Unidade"])
-        self.lfc = self.data_si.get_name_and_return_col_value_str("Tipo", f"lft", ["Unidade"])
+        self.lfc = self.data_si.get_name_and_return_col_value_str("Tipo", f"lfc", ["Unidade"])
         self.papel = self.data_si.get_name_and_return_col_value_str("Tipo", f"papel", ["Unidade"])
         self.orientacao = self.data_si.get_name_and_return_col_value_str("Tipo", f"orientacao", ["Unidade"])
         self.file =  self.data_si.get_name_and_return_col_value_str("Tipo", f"file", ["Unidade"])
