@@ -50,7 +50,7 @@ class ConfiguracoesChildFrame(wx.MDIChildFrame):
             self.parent.set_unit_press(self.combo_box_si_press.GetValue(), self.count_box_press.GetValue())
             self.parent.set_e_modulo( self.input_e.get_value())
             self.parent.set_g_modulo(self.input_g.get_value())
-            self.parent.set_lf_barra(self.lft_input, self.lfc_input)
+            self.parent.set_lf_barra(self.lft_input.get_value(), self.lfc_input.get_value())
             self.parent.set_y_um(self.input_y_um.get_value())
             self.parent.set_papel(self.combo_papel.GetValue())
             self.parent.set_orientacao(value)
