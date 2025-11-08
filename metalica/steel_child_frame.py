@@ -364,56 +364,56 @@ class SteelChildFrame(wx.MDIChildFrame):
             calculadora_de_progresso = CalcProgress(parent, self)
             calculadora_de_progresso.Show()
             calculadora_de_progresso.CentreOnParent()
-            try:
-                time.sleep(2)
-                self.clear_perfil_list()
-                steel_perfil_list = self.data_steel_lmn.return_value_by_one_col("BITOLA mm x kg/mgraus")
+            # try:
+            time.sleep(2)
+            self.clear_perfil_list()
+            steel_perfil_list = self.data_steel_lmn.return_value_by_one_col("BITOLA mm x kg/mgraus")
 
-                print(steel_perfil_list)
-                aef = return_aef()
-                total_de_perfis = len(steel_perfil_list)
+            print(steel_perfil_list)
+            aef = return_aef()
+            total_de_perfis = len(steel_perfil_list)
 
 
-                for i, perfil in enumerate(steel_perfil_list):
-                    a = get_info(perfil, aef)
+            for i, perfil in enumerate(steel_perfil_list):
+                a = get_info(perfil, aef)
 
-                    transformed_list_perfil_data = unit_difiner_list(a)
+                transformed_list_perfil_data = unit_difiner_list(a)
 
-                    time.sleep(0.01)
+                time.sleep(0.01)
 
-                    progress = int((100*(i+1))/total_de_perfis)
-                    # durante o cálculo
-                    wx.CallAfter(calculadora_de_progresso.update_progress, progress)
-                    wx.CallAfter(calculadora_de_progresso.update_progress_perfil_name, perfil, progress)
+                progress = int((100*(i+1))/total_de_perfis)
+                # durante o cálculo
+                wx.CallAfter(calculadora_de_progresso.update_progress, progress)
+                wx.CallAfter(calculadora_de_progresso.update_progress_perfil_name, perfil, progress)
 
-                    if self.select_type.GetValue() == "Soldado":
-                        self.data = VerificationProcess(parent, *transformed_list_perfil_data, "", "Soldado",
-                                                        frame_name, frame_name)
-                    elif self.select_type.GetValue() == "Laminado":
-                        self.data = VerificationProcess(parent, *transformed_list_perfil_data, "", "Laminado",
-                                                        frame_name, frame_name)
+                if self.select_type.GetValue() == "Soldado":
+                    self.data = VerificationProcess(parent, *transformed_list_perfil_data, "", "Soldado",
+                                                    frame_name, frame_name)
+                elif self.select_type.GetValue() == "Laminado":
+                    self.data = VerificationProcess(parent, *transformed_list_perfil_data, "", "Laminado",
+                                                    frame_name, frame_name)
 
-                    self.data.calculate_all()
+                self.data.calculate_all()
 
-                    resultado = [perfil, self.data.calculate_all()]
-                    self.append_perfil_list(resultado)
-                    print(transformed_list_perfil_data)
+                resultado = [perfil, self.data.calculate_all()]
+                self.append_perfil_list(resultado)
+                print(transformed_list_perfil_data)
 
-                calculadora_de_progresso.Close()
-            except Exception as e:
-                calculadora_de_progresso.Close()
-                wx.MessageBox(f"Erro : {e}", "Erro", wx.OK | wx.ICON_ERROR)
+            calculadora_de_progresso.Close()
+            # except Exception as e:
+            #     calculadora_de_progresso.Close()
+            #     wx.MessageBox(f"Erro : {e}", "Erro", wx.OK | wx.ICON_ERROR)
 
         def on_calculate_all(event):
             lista_aprovados_reprovados = PerfilList(parent, self, f"Lista de perfis - {frame_name}")
-            try:
-                thread = threading.Thread(target=calcular_tudo)
-                thread.start()
+            # try:
+            thread = threading.Thread(target=calcular_tudo)
+            thread.start()
 
-                lista_aprovados_reprovados.Show()
-            except Exception as e:
-                lista_aprovados_reprovados.Close()
-                wx.MessageBox(f"Erro : {e}", "Erro", wx.OK | wx.ICON_ERROR)
+            lista_aprovados_reprovados.Show()
+            # except Exception as e:
+            #     lista_aprovados_reprovados.Close()
+            #     wx.MessageBox(f"Erro : {e}", "Erro", wx.OK | wx.ICON_ERROR)
         #------------------------------------------------
         # self.window_main_panel = wx.Panel(self) #cria o painel para por os objetos -> mudar para scroll notebook 720p nao aparece a janela inteira!
         self.window_main_panel = wx.ScrolledWindow(self, style=wx.VSCROLL)

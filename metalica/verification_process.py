@@ -80,7 +80,6 @@ class VerificationProcess:
 
 
     def propriedades(self):
-
         memoria_calculo_propiedades = {
             "titulo_da_secao": "Propriedades",
             "corpo": [
@@ -131,9 +130,9 @@ class VerificationProcess:
 
         ind_esblt_x = self.lfx / self.r_x_text
         ind_esblt_y = self.lfy / self.r_y_text
-
-        print(ind_esblt_y)
-        print(self.lft)
+        #
+        # print(ind_esblt_y)
+        # print(self.lft)
 
         if float(ind_esblt_x) >= float(self.lft) or float(ind_esblt_y) >= float(self.lft):
             limite_esbeltez = r"\textcolor{red}{Esbeltez acima do limite configurado}"
@@ -164,17 +163,30 @@ class VerificationProcess:
                 }
             ]
         }
+        #calculo final em % para nao bugar
+        print(f"***************************** ntsd {ntsd}")
+        print(f"***************************** ntrd {ntrd}")
+
+        ntsd = ntsd.to("N")
+        ntrd = ntrd.to("N")
+
+        print(f"***************************** ntsd {ntsd}")
+        print(f"***************************** ntrd {ntrd}")
+
         utilization_t = ntsd / ntrd
+
         if passou:
-            return False, memoria_calculo_nomal, utilization_t  #nao passa
+            return True, memoria_calculo_nomal, utilization_t
         else:
-            return True, memoria_calculo_nomal, utilization_t  #passa
+            return False, memoria_calculo_nomal, utilization_t  #passa
 
     def normal_compression_l(self):
         # compressao
         # indice de esbeltez da secao recomendado < 200
         ind_esblt_x = self.lfx / self.r_x_text
         ind_esblt_y = self.lfy / self.r_y_text
+        print(f"ind_esblt_x {ind_esblt_x}")
+        print(f"ind_esblt_y {ind_esblt_y}")
 
         if float(ind_esblt_x) >= float(self.lfc) or float(ind_esblt_y) >= float(self.lfc):
             limite_esbeltez = r"\textcolor{red}{Esbeltez acima do limite configurado}"
@@ -182,23 +194,43 @@ class VerificationProcess:
             limite_esbeltez = ""
 
         # flambagem por flexao em x
-        n_e_x = (np.pi ** 2) * self.e * self.i_x_text / (self.lfx ** 2)
-        n_e_y = (np.pi ** 2) * self.e * self.i_y_text / (self.lfy ** 2)
+        n_e_x = (np.pi ** 2) * self.e * self.i_x_text / (self.lfx ** 2)#ok
+
+
+        print(f"************************ e = {self.e}")
+        print(f"************************ i_x = {self.i_x_text}")
+        print(f"************************ lfx = {self.lfx}")
+        print(f"************************ n_e_x = {n_e_x}")
+
+        n_e_y = (np.pi ** 2) * self.e * self.i_y_text / (self.lfy ** 2)#ok
+
+        print(f"ney {n_e_y}")
+
         r_o = np.sqrt(self.r_x_text ** 2 + self.r_y_text ** 2 + 0 + 0)  # considerando o perfil como simetrico
 
         n_e_z = (1 / (r_o ** 2)) * (((np.pi ** 2) * self.e * self.cw_text / (
                 self.lfz ** 2)) + self.g * self.i_t_text)  # J = it na tabela
 
+        print(n_e_z)
+
         n_e = min([n_e_x, n_e_y, n_e_z])
+        print(n_e)
+
         # lambda0 5.3.3.2
-        lbd_zero = np.sqrt(self.area_text * self.fy / n_e)
-        # print(f"lbd_zero {lbd_zero}")
+        lbd_zero = np.sqrt(self.area_text * self.fy / n_e) #ok
+        print(f"area  {self.area_text} fy {self.fy} n_E = {n_e}")
+
 
         # fator de reducao 5.3.3.1
+        print(f"{lbd_zero}")
+        print(f"lambda 0 = {lbd_zero}")
+
         if lbd_zero.magnitude <= 1.5:
-            psi = 0.658 ** (lbd_zero.magnitude ** 2)
+            psi = 0.658 ** (lbd_zero ** 2)
+            print(f"psi {psi}")
         else:
-            psi = 0.877 / (lbd_zero.magnitude ** 2)
+            psi = 0.877 / (lbd_zero ** 2)
+            print(f"psi 2 {psi}")
         # ************************************************************************************************************
         # verificacao da esbeltez local
         # elemento AA
@@ -231,17 +263,34 @@ class VerificationProcess:
                 # area_efetiva_aba = (self.bf_text/2) * self.tf_text
             else:
                 print("b_sobre_t_aba - nao passou ")
+                print("//////////////////////////////////////////")
+                print(f"self.e {self.e}")
+                print(f"self.fy {self.fy}")
+                print(f"self.bf_text {self.bf_text}")
+                print(f"self.tf_text  {self.tf_text}")
+                print(f"sigma_e_l  {sigma_e_l}")
+                print(f"psi  {psi}")
                 sigma_e_l = ((1.49 * (
                         (0.56 * np.sqrt(self.e / self.fy)) / ((self.bf_text / 2 )* self.tf_text))) ** 2) * self.fy
                 b_efetivo_aba = (self.bf_text / 2) * (1 - 0.22 * np.sqrt(sigma_e_l / (psi * self.fy))) * np.sqrt(
                     sigma_e_l / (psi * self.fy))
+                print(f"b_efetivo_aba {b_efetivo_aba}")
+                print("//////////////////////////////////////////")
+
                 area_efetiva_aba = (b_efetivo_aba * self.tf_text) *4
                 # area_efetiva_aba = ((self.bf_text/2) * self.tf_text)- b_efetivo
             area_efetiva = self.area_text - area_efetiva_alma - area_efetiva_aba
 
             # area_efetiva = self.area_text - area_efetiva_alma - area_efetiva_aba - b_efetivo_alma - b_efetivo_aba * 4
         nrdc = psi * area_efetiva * self.fy / self.y_um
+        print(f"psi {psi}")
+        print(f"area  {area_efetiva}")
+        print(f"self.fy  {self.fy}")
+        print(f"self.y_um  {self.y_um}")
+        print(f"nrdc  {nrdc}")
+
         passou = abs(self.fnc) <= nrdc  # verificando
+
         status_texto = r" \textcolor{ForestGreen}{Aprovado}" if passou else r"\textcolor{red}{Reprovado}"
 
         memoria_calculo_normal_c = {
@@ -390,7 +439,12 @@ class VerificationProcess:
             ]
         }
 
-        utilization_c = abs(self.fnc) / nrdc
+        fnc= self.fnc.to("N")
+        nrdc = nrdc.to("N")
+        utilization_c = abs(fnc / nrdc)
+
+        print(f"fnc {self.fnc} nrdc {nrdc}")
+        print(utilization_c)
         if passou:
             # elemento passa
             return True, memoria_calculo_normal_c, utilization_c
@@ -427,9 +481,9 @@ class VerificationProcess:
 
         # fator de reducao 5.3.3.1
         if lbd_zero.magnitude <= 1.5:
-            psi = 0.658 ** (lbd_zero.magnitude ** 2)
+            psi = 0.658 ** (lbd_zero ** 2)
         else:
-            psi = 0.877 / (lbd_zero.magnitude ** 2)
+            psi = 0.877 / (lbd_zero ** 2)
         # ************************************************************************************************************
         # verificacao da esbeltez local
         # elemento AA
@@ -641,7 +695,9 @@ class VerificationProcess:
                 },
             ]
         }
-        utilization_c = self.fnc / nrdc
+        fnc= self.fnc.to("N")
+        nrdc = nrdc.to("N")
+        utilization_c = abs(fnc / nrdc)
 
         if passou:
             # elemento passa
@@ -745,7 +801,10 @@ class VerificationProcess:
             ]
         }
 
+        fcy= self.fcy.to("N")
+        vrd = vrd.to("N")
         utilization_s_y = self.fcy / vrd
+
         if passou:
             return True, memoria_calculo_shear_y, utilization_s_y
         else:
@@ -848,7 +907,10 @@ class VerificationProcess:
             ]
         }
 
+        fcx= self.fcx.to("N")
+        vrd = vrd.to("N")
         utilization_s_x = self.fcx / vrd
+
         if passou:
             return True, memoria_calculo_shear_x, utilization_s_x
         else:
@@ -1185,7 +1247,10 @@ class VerificationProcess:
             ]
         }
 
+        mfx= self.mfx.to("N*m")
+        mrd_min = mrd_min.to("N*m")
         utilization_m_x = self.mfx / mrd_min
+
         if passou:
             return True, memoria_calculo_moment_x, utilization_m_x
         else:
@@ -1543,7 +1608,10 @@ class VerificationProcess:
                 }
             ]
         }
+        mfx= self.mfx.to("N*m")
+        mrd_min = mrd_min.to("N*m")
         utilization_m_x = self.mfx / mrd_min
+
         if passou:
             return True, memoria_calculo_moment_x, utilization_m_x
         else:
@@ -1680,12 +1748,14 @@ class VerificationProcess:
                 }
             ]
         }
+        mfy= self.mfy.to("N*m")
+        mrd_min = mrd_min.to("N*m")
+        utilization_m_y = self.mfy / mrd_min
 
-        utilization_m_x = y = self.mfy / mrd_min
         if passou:
-            return True, memoria_calculo_moment_y, utilization_m_x
+            return True, memoria_calculo_moment_y, utilization_m_y
         else:
-            return False, memoria_calculo_moment_y, utilization_m_x
+            return False, memoria_calculo_moment_y, utilization_m_y
 
 
     def moment_force_y_s(self):
@@ -1833,6 +1903,11 @@ class VerificationProcess:
         }
 
         utilization_m_y = y = self.mfy / mrd_min
+
+        mfy= self.mfy.to("N*m")
+        mrd_min = mrd_min.to("N*m")
+        utilization_m_y = self.mfy / mrd_min
+
         if passou:
             return True, memoria_calculo_moment_y, utilization_m_y
         else:
@@ -1849,6 +1924,8 @@ class VerificationProcess:
         mrdy = self.moment_force_y_l()
 
         utilization = [nrdt[2], nrdc[2]]
+        print(f"UTILIZATION {utilization}")
+
         result_list = []
         memoria_calculo_forcas_combinadas = {
             "titulo_da_secao": "Verificação dos esforços combinados: ",
@@ -1895,8 +1972,10 @@ class VerificationProcess:
             result_list.append(passou)
 
         maior_valor = max(valores_de_retorno_ec)
-
-        return all([result_list, vrd_x[0],vrd_y[0]]), memoria_calculo_forcas_combinadas, maior_valor.magnitude
+        print(f"##################################### {valores_de_retorno_ec}")
+        todos_valores_para_verificar = [nrdt[0], nrdc[0], vrd_x[0], vrd_y[0], mrdx[0], mrdy[0], result_list[0], result_list[1]]
+        print(f"##################################### {todos_valores_para_verificar}")
+        return all(todos_valores_para_verificar), memoria_calculo_forcas_combinadas, maior_valor.magnitude
 
     def combined_forces_s(self):
         # fazer a verificao aqui! ver na norma
@@ -1955,11 +2034,13 @@ class VerificationProcess:
             result_list.append(passou)
             maior_valor = max(valores_de_retorno_ec)
 
-        return all([result_list, vrd_x[0], vrd_y[0]]), memoria_calculo_forcas_combinadas, maior_valor.magnitude
+        todos_valores_para_verificar = [nrdt[0], nrdc[0], vrd_x[0], vrd_y[0], mrdx[0], mrdy[0], result_list[0], result_list[1]]
+        return all(todos_valores_para_verificar), memoria_calculo_forcas_combinadas, maior_valor.magnitude
 
 
 
     def calculate(self):
+
         if self.type == "Laminado":
             propiedades = self.propriedades()
             nrdt = self.normal_traction_l()
@@ -1983,6 +2064,7 @@ class VerificationProcess:
                 meu_relatorio.add_calculo(ec[1])
                 meu_relatorio.gerar_pdf()
                 wx.MessageBox("Calculado com sucesso!", "Sucesso",wx.OK | wx.ICON_INFORMATION )
+                print(f"ec =  {ec[0]} {ec[1]}")
                 return ec[0], ec[2]
             except Exception as error:
                 wx.MessageBox(f"{error}", "Erro",wx.OK | wx.ICON_ERROR)
@@ -2014,6 +2096,7 @@ class VerificationProcess:
                 wx.MessageBox(f"{error}", "Erro", wx.OK | wx.ICON_ERROR)
                 return ecs[0]
     def calculate_all(self):
+        print(f"---------------------------------- {self.perfil_name}")
         if self.type == "Laminado":
             ec = self.combined_forces_l()
             return ec[0]
