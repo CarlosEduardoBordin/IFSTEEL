@@ -262,14 +262,14 @@ class VerificationProcess:
                 area_efetiva_aba = 0
                 # area_efetiva_aba = (self.bf_text/2) * self.tf_text
             else:
-                print("b_sobre_t_aba - nao passou ")
-                print("//////////////////////////////////////////")
-                print(f"self.e {self.e}")
-                print(f"self.fy {self.fy}")
-                print(f"self.bf_text {self.bf_text}")
-                print(f"self.tf_text  {self.tf_text}")
-                print(f"sigma_e_l  {sigma_e_l}")
-                print(f"psi  {psi}")
+                # print("b_sobre_t_aba - nao passou ")
+                # print("//////////////////////////////////////////")
+                # print(f"self.e {self.e}")
+                # print(f"self.fy {self.fy}")
+                # print(f"self.bf_text {self.bf_text}")
+                # print(f"self.tf_text  {self.tf_text}")
+                # # print(f"sigma_e_l  {sigma_e_l}")
+                # print(f"psi  {psi}")
                 sigma_e_l = ((1.49 * (
                         (0.56 * np.sqrt(self.e / self.fy)) / ((self.bf_text / 2 )* self.tf_text))) ** 2) * self.fy
                 b_efetivo_aba = (self.bf_text / 2) * (1 - 0.22 * np.sqrt(sigma_e_l / (psi * self.fy))) * np.sqrt(

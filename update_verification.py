@@ -5,7 +5,7 @@ import webbrowser
 class UpdateVerif:
     def __init__(self):
         #versao corrente da aplicacao
-        self.current_version = "v1.2.0"
+        self.current_version = "v1.2.5"
 
     def get_version(self):
         return self.current_version
@@ -22,6 +22,7 @@ class UpdateVerif:
                 dialog_button =  wx.MessageBox(f"Nova versão disponível no GitHub, deseja atualizar?", "Atualização", style=wx.YES_NO | wx.ICON_QUESTION)
                 if dialog_button == wx.YES:
                     webbrowser.open("https://github.com/CarlosEduardoBordin/IFSTEEL/releases")
+                    
 
         except Exception as error:
             pass
